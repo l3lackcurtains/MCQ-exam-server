@@ -20,9 +20,25 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
+var _passport = require('passport');
+
+var _passport2 = _interopRequireDefault(_passport);
+
+var _expressValidator = require('express-validator');
+
+var _expressValidator2 = _interopRequireDefault(_expressValidator);
+
 var _config = require('./utils/config');
 
 var _config2 = _interopRequireDefault(_config);
+
+var _passport3 = require('./utils/passport');
+
+var _passport4 = _interopRequireDefault(_passport3);
+
+var _user = require('./routes/user');
+
+var _user2 = _interopRequireDefault(_user);
 
 var _study = require('./routes/study');
 
@@ -57,7 +73,15 @@ app.use(_bodyParser2.default.urlencoded({ limit: '50mb', extended: false, parame
 app.use((0, _helmet2.default)());
 app.use('/', _express2.default.static(_path2.default.join(__dirname, 'public')));
 
+// api field validator
+app.use((0, _expressValidator2.default)());
+
+// passport initialization..
+app.use(_passport2.default.initialize());
+(0, _passport4.default)(_passport2.default);
+
 // Api end points
+app.use('/api', _user2.default);
 app.use('/api', _study2.default);
 app.use('/api', _mcq2.default);
 app.use('/api', _upload2.default);
