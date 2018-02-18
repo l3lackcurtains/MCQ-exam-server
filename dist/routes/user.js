@@ -151,7 +151,7 @@ router.post('/register', function (req, res) {
 				};return transporter.sendMail(mailOptions, function (trerr) {
 					if (trerr) {
 						_user2.default.findByIdAndRemove(newUser._id);
-						return res.json({ status: false, message: 'Couldn\'t send email verification', error: trerr.message });
+						return res.json({ success: false, message: 'Couldn\'t send email verification', error: trerr.message });
 					}
 					return res.json({ success: true, message: 'A verification email has been sent to ' + newUser.email });
 				});
@@ -293,9 +293,9 @@ router.post('/resend-verification', function (req, res) {
 				// Send verification Link
 			};return transporter.sendMail(mailOptions, function (trerr) {
 				if (trerr) {
-					return res.json({ status: false, message: 'Couldn\'t send email verification', error: trerr.message });
+					return res.json({ success: false, message: 'Couldn\'t send email verification', error: trerr.message });
 				}
-				return res.json({ status: false, message: 'A verification email has been sent to ' + user.email });
+				return res.json({ success: true, message: 'A verification email has been sent to ' + user.email });
 			});
 		});
 	});
@@ -368,9 +368,9 @@ router.post('/ask-reset-password', function (req, res) {
 				// Send verification Link
 			};return transporter.sendMail(mailOptions, function (trerr) {
 				if (trerr) {
-					return res.json({ status: false, message: 'Couldn\'t send password reset email', error: trerr.message });
+					return res.json({ success: false, message: 'Couldn\'t send password reset email', error: trerr.message });
 				}
-				return res.json({ status: false, message: 'An email to reset password has been sent to ' + user.email });
+				return res.json({ success: true, message: 'An email to reset password has been sent to ' + user.email });
 			});
 		});
 	});
