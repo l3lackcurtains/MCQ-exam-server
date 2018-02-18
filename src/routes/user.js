@@ -98,7 +98,7 @@ router.post('/register', (req, res) => {
 				return transporter.sendMail(mailOptions, (trerr) => {
 					if (trerr) {
 						User.findByIdAndRemove(newUser._id)
-						return res.json({ status: false, message: 'Couldn\'t send email verification', error: trerr.message })
+						return res.json({ success: false, message: 'Couldn\'t send email verification', error: trerr.message })
 					}
 					return res.json({ success: true, message: `A verification email has been sent to ${newUser.email}` })
 				})
@@ -236,8 +236,8 @@ router.post('/resend-verification', (req, res) => {
 
 			// Send verification Link
 			return transporter.sendMail(mailOptions, (trerr) => {
-				if (trerr) { return res.json({ status: false, message: 'Couldn\'t send email verification', error: trerr.message }) }
-				return res.json({ status: false, message: `A verification email has been sent to ${user.email}` })
+				if (trerr) { return res.json({ success: false, message: 'Couldn\'t send email verification', error: trerr.message }) }
+				return res.json({ success: true, message: `A verification email has been sent to ${user.email}` })
 			})
 		})
 	})
@@ -309,8 +309,8 @@ router.post('/ask-reset-password', (req, res) => {
 
 			// Send verification Link
 			return transporter.sendMail(mailOptions, (trerr) => {
-				if (trerr) { return res.json({ status: false, message: 'Couldn\'t send password reset email', error: trerr.message }) }
-				return res.json({ status: false, message: `An email to reset password has been sent to ${user.email}` })
+				if (trerr) { return res.json({ success: false, message: 'Couldn\'t send password reset email', error: trerr.message }) }
+				return res.json({ success: true, message: `An email to reset password has been sent to ${user.email}` })
 			})
 		})
 	})
