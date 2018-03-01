@@ -14,6 +14,8 @@ import study from './routes/study'
 import mcq from './routes/mcq'
 import upload from './routes/upload'
 import usermeta from './routes/usermeta'
+import discussion from './routes/discussion'
+import comment from './routes/comment'
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -44,6 +46,8 @@ app.use('/api', study)
 app.use('/api', mcq)
 app.use('/api', upload)
 app.use('/api', usermeta)
+app.use('/api', discussion)
+app.use('/api', comment)
 
 app.listen(port, () => {
 console.log(`
