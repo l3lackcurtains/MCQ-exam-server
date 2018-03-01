@@ -57,7 +57,7 @@ router.get('/discussion', async (req, res) => {
     try {
         const data = await Discussion.paginate(findFilter, { page: pageNo, limit: limitNo, sort, select })
         if (!data) res.json({ success: false, message: "Error fetching discussion." })
-        res.json({ success: true, message: "User metas successfully fetched.", data })
+        res.json({ success: true, message: "Discussions successfully fetched.", data })
     } catch(e) {
         res.json({ success: false, message: "Something went wrong, Try again.", error: e })
     }
