@@ -77,9 +77,12 @@ router.post('/register', (req, res) => {
 
 				// Send the email
 				const transporter = nodemailer.createTransport({
-					host: 'smtp.gmail.com',
+					host: 'mail.lazarustud.io',
 					port: 587,
 					secure: false,
+					tls: true,
+					lsOptions: { rejectUnauthorized: false }
+,
 					auth: {
 						user: config.email.id,
 						pass: config.email.pass,
@@ -219,9 +222,10 @@ router.post('/resend-verification', (req, res) => {
 
 			// Send the email
 			const transporter = nodemailer.createTransport({
-				host: 'smtp.gmail.com',
+				host: 'mail.lazarustud.io',
 				port: 587,
 				secure: false,
+				tls: { rejectUnauthorized: false },
 				auth: {
 					user: config.email.id,
 					pass: config.email.pass,
@@ -292,9 +296,10 @@ router.post('/ask-reset-password', (req, res) => {
 
 			// Send the email
 			const transporter = nodemailer.createTransport({
-				host: 'smtp.gmail.com',
+				host: 'mail.lazarustud.io',
 				port: 587,
 				secure: false,
+				tls: { rejectUnauthorized: false },
 				auth: {
 					user: config.email.id,
 					pass: config.email.pass,
