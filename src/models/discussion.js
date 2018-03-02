@@ -5,21 +5,21 @@ import mongoosePaginate from 'mongoose-paginate'
 const Schema = mongoose.Schema
 
 const discussionSchema = Schema({
-	uid: {
-		type: String,
-		required: true,
-	},
-	type: {
-		type: Boolean,
+    uid: {
+        type: String,
+        required: true,
+    },
+    type: {
+        type: Boolean,
     },
     question: {
-		type: String,
+        type: String,
     },
     answers: [
         {
             option: String,
-            vote: String,
-            votedBy: String,
+            vote: Number,
+            votedBy: [String],
         }
     ],
     favoritedBy: [String]

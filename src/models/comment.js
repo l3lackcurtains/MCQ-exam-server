@@ -8,14 +8,14 @@ const commentSchema = Schema({
 	uid: {
 		type: String,
 		required: true,
-    },
-    did: {
+	},
+	did: {
 		type: String,
 		required: true,
 	},
-    comment: {
+	comment: {
 		type: String,
-    },
+	},
 }, { collection: 'comment', timestamps: true })
 
 commentSchema.plugin(mongoosePaginate)

@@ -58,6 +58,8 @@ router.post('/register', (req, res) => {
 				})
 			}
 
+			/*
+
 			// Create a email verification token
 			const token = Token({
 				userId: newUser._id,
@@ -106,6 +108,9 @@ router.post('/register', (req, res) => {
 					return res.json({ success: true, message: `A verification email has been sent to ${newUser.email}` })
 				})
 			})
+
+			*/
+			return res.json({ success: true, message: `User successfully registered with email address ${newUser.email}` })
 		})
 	})
 })
@@ -440,7 +445,7 @@ router.post('/authenticate', (req, res) => {
  * get Users
  * *************************************
 */
-router.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.get('/users', async (req, res) => {
 	const { page, limit, order, sortBy, fields, ...filter } = req.query
 	let pageNo = parseInt(page, 10)
 	let limitNo = parseInt(limit, 10)
@@ -491,7 +496,7 @@ router.get('/users/:id', async (req, res) => {
  * update user
  * *************************************
 */
-router.put('/users/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/users/:id', async (req, res) => {
 	const user = await User.findOne({ _id: req.params.id })
 	if (!user) res.json({ success: false, message: 'User id is invalid.' })
 	const { password, oldPassword, ...rest } = req.body
@@ -514,7 +519,7 @@ router.put('/users/:id', passport.authenticate('jwt', { session: false }), async
  * delete user
  * *************************************
 */
-router.delete('/users/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/users/:id', async (req, res) => {
 	const removeduser = await User.findByIdAndRemove(req.params.id)
 	if (!removeduser) {
 		res.json({ success: false, message: 'Unable to delete user.' })
