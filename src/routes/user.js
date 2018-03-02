@@ -417,12 +417,14 @@ router.post('/authenticate', (req, res) => {
 				message: 'User with this email doesn\'t exist.',
 			})
 		}
+		/*
 		if (!user.isVerified) {
 			return res.json({
 				success: false,
 				message: 'User is not verified. Check your email.',
 			})
 		}
+		*/
 		if (!user.comparePassword(req.body.password)) { return res.json({ success: false, message: 'Incorrect Password.' }) }
 		const tokenData = {
 			_id: user._id,
