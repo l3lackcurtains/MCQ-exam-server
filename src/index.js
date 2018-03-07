@@ -35,7 +35,6 @@ app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false, parameterLimit: 50000 }))
 app.use(helmet())
 app.use(express.static(path.join(__dirname + '/public')))
-app.disable('etag')
 
 // api field validator
 app.use(expressValidator())
@@ -43,6 +42,11 @@ app.use(expressValidator())
 app.get('/', (req, res) => {
     res.render('home')
 })
+
+app.get('/*', function(req, res, next){ 
+    res.setHeader('Last-Modified', (new Date()).toUTCString());
+    next(); 
+});
 
 // passport initialization..
 app.use(passport.initialize())
