@@ -74,17 +74,17 @@ router.post('/upload-image', cpUpload, async (req, res) => {
 	const file = req.file
 	if (file) {
         const study = await Study.findOne({ _id: studyID })
-        if (!study) res.json({ success: false, message: 'Study id is invalid.' })
+        if (!study) return res.json({ success: false, message: 'Study id is invalid.' })
         study.set({ imageUrl: `/media/${file.filename}` })
         const updateStudy = study.save()
-        if (!updateStudy) res.json({ success: false, message: 'Something went wrong try again.' })
-        res.redirect('/')
+        if (!updateStudy) return res.json({ success: false, message: 'Something went wrong try again.' })
+        return res.redirect('/')
     }
 	return res.json({ status: false, message: 'Error uploading image.' })
 })
 
 router.get('/upload-image', (req, res) => {
-    res.redirect('/')
+    return res.redirect('/')
 })
 
 export default router
