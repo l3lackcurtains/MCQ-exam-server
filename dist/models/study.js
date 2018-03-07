@@ -19,7 +19,8 @@ var Schema = _mongoose2.default.Schema;
 var studySchema = Schema({
     question: {
         type: String,
-        required: true
+        required: true,
+        text: true
     },
     answers: {
         type: [String]

@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <div class="card" style="margin: 36px; padding: 18px;">
+                {{#if studies}} {{#each studies}}
+                <a class="study-box" href="/study/{{_id}}">
+                    <div class="row valign-wrapper">
+                        <div class="col s2">
+                            {{#if imageUrl}}
+                                <img src="{{imageUrl}}" alt="" class="responsive-img">
+                            {{else}}
+                                <span>No Image</span>
+                            {{/if}}
+                        </div>
+                        <div class="col s10">
+                            <span class="black-text">
+                                <p># {{_id}}</p>
+                                <h5>{{question}}</h5>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+                {{/each}} {{else}}
+                <p>No Results found</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -31,7 +31,7 @@ var router = _express2.default.Router();
 */
 var imageStorage = _multer2.default.diskStorage({
 	destination: function destination(req, file, cb) {
-		cb(null, './src/public/media');
+		cb(null, _path2.default.resolve(__dirname + '/../public/media'));
 	},
 	filename: function filename(req, file, cb) {
 		var filename = (0, _md2.default)('' + file.originalname) + _path2.default.extname(file.originalname);

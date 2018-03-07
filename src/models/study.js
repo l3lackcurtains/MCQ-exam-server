@@ -7,6 +7,7 @@ const studySchema = Schema({
 	question: {
         type: String,
         required: true,
+        text: true
     },
     answers: {
         type: [String],

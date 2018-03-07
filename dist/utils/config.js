@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 var config = {
     secret: 'ThisisAppSecret',
-    mdbl: 'mongodb://localhost/medicalapp',
-    email: {
-        id: 'devheaps@gmail.com',
-        pass: 'madhav777'
-    }
+    mdbl: 'mongodb://localhost/medicalapp'
+    //   email: {
+    //     id: 'test@lazarustud.io',
+    //     pass: 'madhav777@',
+    // },
 };
 
 exports.default = config;

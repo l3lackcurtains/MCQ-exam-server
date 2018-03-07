@@ -114,48 +114,54 @@ router.post('/register', function (req, res) {
 				});
 			}
 
-			// Create a email verification token
-			var token = (0, _token2.default)({
-				userId: newUser._id,
-				token: _crypto2.default.randomBytes(16).toString('hex')
-			});
-
-			// Save the verification token
-			return token.save(function (err2) {
-				if (err2) {
-					_user2.default.findByIdAndRemove(newUser._id);
-					return res.json({
-						success: false,
-						message: 'Something went wrong, Try again.',
-						error: err2
-					});
-				}
-
-				// Send the email
-				var transporter = _nodemailer2.default.createTransport({
-					host: 'smtp.gmail.com',
-					port: 587,
-					secure: false,
-					auth: {
-						user: _config2.default.email.id,
-						pass: _config2.default.email.pass
-					}
-				});
-				var mailOptions = {
-					from: 'no-reply@brainapp.com',
-					to: newUser.email,
-					subject: 'Account Verification',
-					text: 'Hello,\n\t\t\t\t\t\t\n\n\n\t\t\t\t\t\tPlease verify your account by clicking the link:\n http://' + req.headers.host + '/verification/' + token.token + '\n'
-
-					// Send verification Link
-				};return transporter.sendMail(mailOptions, function (trerr) {
-					if (trerr) {
-						_user2.default.findByIdAndRemove(newUser._id);
-						return res.json({ success: false, message: 'Couldn\'t send email verification', error: trerr.message });
-					}
-					return res.json({ success: true, message: 'A verification email has been sent to ' + newUser.email });
-				});
-			});
+			/*
+   	// Create a email verification token
+   const token = Token({
+   	userId: newUser._id,
+   	token: crypto.randomBytes(16).toString('hex'),
+   })
+   	// Save the verification token
+   return token.save((err2) => {
+   	if (err2) {
+   		User.findByIdAndRemove(newUser._id)
+   		return res.json({
+   			success: false,
+   			message: 'Something went wrong, Try again.',
+   			error: err2,
+   		})
+   	}
+   		// Send the email
+   	const transporter = nodemailer.createTransport({
+   		host: 'mail.lazarustud.io',
+   		port: 587,
+   		secure: false,
+   		tls: true,
+   		lsOptions: { rejectUnauthorized: false }
+   ,
+   		auth: {
+   			user: config.email.id,
+   			pass: config.email.pass,
+   		},
+   	})
+   	const mailOptions = {
+   		from: 'no-reply@brainapp.com',
+   		to: newUser.email,
+   		subject: 'Account Verification',
+   		text: `Hello,
+   			\n\n
+   			Please verify your account by clicking the link:\n http://${req.headers.host}/verification/${token.token}\n`,
+   	}
+   		// Send verification Link
+   	return transporter.sendMail(mailOptions, (trerr) => {
+   		if (trerr) {
+   			User.findByIdAndRemove(newUser._id)
+   			return res.json({ success: false, message: 'Couldn\'t send email verification', error: trerr.message })
+   		}
+   		return res.json({ success: true, message: `A verification email has been sent to ${newUser.email}` })
+   	})
+   })
+   	*/
+			return res.json({ success: true, message: 'User successfully registered with email address ' + newUser.email });
 		});
 	});
 });
@@ -276,9 +282,10 @@ router.post('/resend-verification', function (req, res) {
 
 			// Send the email
 			var transporter = _nodemailer2.default.createTransport({
-				host: 'smtp.gmail.com',
+				host: 'mail.lazarustud.io',
 				port: 587,
 				secure: false,
+				tls: { rejectUnauthorized: false },
 				auth: {
 					user: _config2.default.email.id,
 					pass: _config2.default.email.pass
@@ -351,9 +358,10 @@ router.post('/ask-reset-password', function (req, res) {
 
 			// Send the email
 			var transporter = _nodemailer2.default.createTransport({
-				host: 'smtp.gmail.com',
+				host: 'mail.lazarustud.io',
 				port: 587,
 				secure: false,
+				tls: { rejectUnauthorized: false },
 				auth: {
 					user: _config2.default.email.id,
 					pass: _config2.default.email.pass
@@ -471,12 +479,14 @@ router.post('/authenticate', function (req, res) {
 				message: 'User with this email doesn\'t exist.'
 			});
 		}
-		if (!user.isVerified) {
-			return res.json({
-				success: false,
-				message: 'User is not verified. Check your email.'
-			});
-		}
+		/*
+  if (!user.isVerified) {
+  	return res.json({
+  		success: false,
+  		message: 'User is not verified. Check your email.',
+  	})
+  }
+  */
 		if (!user.comparePassword(req.body.password)) {
 			return res.json({ success: false, message: 'Incorrect Password.' });
 		}
@@ -499,7 +509,7 @@ router.post('/authenticate', function (req, res) {
  * get Users
  * *************************************
 */
-router.get('/users', _passport2.default.authenticate('jwt', { session: false }), function () {
+router.get('/users', function () {
 	var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(req, res) {
 		var _req$query, page, limit, order, sortBy, fields, filter, pageNo, limitNo, sort, findFilter, select, orderNo, data;
 
@@ -599,7 +609,7 @@ router.get('/users/:id', function () {
  * update user
  * *************************************
 */
-router.put('/users/:id', _passport2.default.authenticate('jwt', { session: false }), function () {
+router.put('/users/:id', function () {
 	var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(req, res) {
 		var user, _req$body, password, oldPassword, rest;
 
@@ -659,7 +669,7 @@ router.put('/users/:id', _passport2.default.authenticate('jwt', { session: false
  * delete user
  * *************************************
 */
-router.delete('/users/:id', _passport2.default.authenticate('jwt', { session: false }), function () {
+router.delete('/users/:id', function () {
 	var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(req, res) {
 		var removeduser;
 		return _regenerator2.default.wrap(function _callee4$(_context4) {
