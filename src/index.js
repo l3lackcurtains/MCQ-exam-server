@@ -17,6 +17,8 @@ import upload from './routes/upload'
 import usermeta from './routes/usermeta'
 import discussion from './routes/discussion'
 import comment from './routes/comment'
+import test from './routes/test'
+
 // common routes
 import common from './routes/common'
 
@@ -61,6 +63,7 @@ app.use('/api', upload)
 app.use('/api', usermeta)
 app.use('/api', discussion)
 app.use('/api', comment)
+app.use('/api', test)
 
 // handlebars viewengine
 app.set('views', path.join(__dirname + '/views'));
