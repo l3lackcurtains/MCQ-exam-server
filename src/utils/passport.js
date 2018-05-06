@@ -1,20 +1,22 @@
-import Jwt from 'passport-jwt'
+import Jwt from 'passport-jwt';
 
-import User from '../models/user'
-import config from './config'
+import User from '../models/user';
+import config from './config';
 
-const JwtStrategy = Jwt.Strategy
-const ExtractJwt = Jwt.ExtractJwt
+const JwtStrategy = Jwt.Strategy;
+const { ExtractJwt } = Jwt;
 
-const jwtAuth = (passport) => {
-	const options = {}
-	options.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt')
-	options.secretOrKey = config.secret
-	passport.use(new JwtStrategy(options, async (jwtPayload, done) => {
-		const user = await User.findOne({ _id: jwtPayload.data._id })
-		if (!user) return done(null, false)
-		return done(null, user)
-	}))
-}
+const jwtAuth = passport => {
+  const options = {};
+  options.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
+  options.secretOrKey = config.secret;
+  passport.use(
+    new JwtStrategy(options, async (jwtPayload, done) => {
+      const user = await User.findOne({ _id: jwtPayload.data._id }); // eslint-disable-line
+      if (!user) return done(null, false);
+      return done(null, user);
+    })
+  );
+};
 
-export default jwtAuth
+export default jwtAuth;

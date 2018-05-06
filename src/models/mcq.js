@@ -1,40 +1,47 @@
-import mongoose from 'mongoose'
-import mongoosePaginate from 'mongoose-paginate'
+import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
+import AutoIncrement from 'mongoose-sequence';
 
-const Schema = mongoose.Schema
+const AutoInc = AutoIncrement(mongoose);
 
-const mcqSchema = Schema({
-	question: {
-        type: String,
-        required: true,
+const { Schema } = mongoose;
+
+const mcqSchema = Schema(
+  {
+    question: {
+      type: String,
+      required: true
     },
     rightAnswer: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
     rightAnswerDesc: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
     wrongAnswers: {
-        type: [String],
-        required: true
+      type: [String],
+      required: true
     },
     imageUrl: {
-        type: String,
+      type: String
     },
     category: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
     subCategory: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     }
-}, { collection: 'mcq', timestamps: true })
+  },
+  { collection: 'mcq', timestamps: true }
+);
 
-mcqSchema.plugin(mongoosePaginate)
+mcqSchema.plugin(mongoosePaginate);
+mcqSchema.plugin(AutoInc, { inc_field: 'mid' });
 
-const Mcq = mongoose.model('Mcq', mcqSchema)
+const Mcq = mongoose.model('Mcq', mcqSchema);
 
-export default Mcq
+export default Mcq;

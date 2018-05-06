@@ -1,10 +1,6 @@
 const config = {
-    secret: 'ThisisAppSecret',
-    mdbl: 'mongodb://localhost/medicalapp',
-  //   email: {
-  //     id: 'test@lazarustud.io',
-  //     pass: 'madhav777@',
-	// },
-}
+  secret: 'ThisisAppSecret',
+  mdbl: 'mongodb://localhost/medicalapp'
+};
 
-export default config
+export default config;

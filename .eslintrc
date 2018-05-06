@@ -1,0 +1,18 @@
+{
+  "extends": ["airbnb-base", "prettier"],
+  "parser": "babel-eslint",
+  "plugins": ["prettier"],
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "rules": {
+    "comma-dangle": 0,
+    "semi": 1,
+    "no-console": 0,
+    "linebreak-style": 0,
+    "no-nested-ternary": 0,
+    "import/no-unresolved": 0
+  }
+}

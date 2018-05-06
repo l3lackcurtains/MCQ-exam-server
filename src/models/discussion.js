@@ -1,32 +1,34 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcrypt-nodejs'
-import mongoosePaginate from 'mongoose-paginate'
+import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
 
-const Schema = mongoose.Schema
+const { Schema } = mongoose;
 
-const discussionSchema = Schema({
+const discussionSchema = Schema(
+  {
     uid: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
     type: {
-        type: Boolean,
+      type: Boolean
     },
     question: {
-        type: String,
+      type: String
     },
     answers: [
-        {
-            option: String,
-            vote: Number,
-            votedBy: [String],
-        }
+      {
+        option: String,
+        vote: Number,
+        votedBy: [String]
+      }
     ],
     favoritedBy: [String]
-}, { collection: 'discussion', timestamps: true })
+  },
+  { collection: 'discussion', timestamps: true }
+);
 
-discussionSchema.plugin(mongoosePaginate)
+discussionSchema.plugin(mongoosePaginate);
 
-const Discussion = mongoose.model('Discussion', discussionSchema)
+const Discussion = mongoose.model('Discussion', discussionSchema);
 
-export default Discussion
+export default Discussion;
