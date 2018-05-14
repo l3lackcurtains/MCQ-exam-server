@@ -66,6 +66,9 @@ app.use('/api', discussion);
 app.use('/api', comment);
 app.use('/api', test);
 
+// scheduling task
+require('./utils/schedule'); // eslint-disable-line
+
 // handlebars viewengine
 app.set('views', path.join(`${__dirname}/views`));
 app.engine(

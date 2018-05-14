@@ -27,6 +27,14 @@ const usermetaSchema = Schema(
     },
     studyBookmarks: {
       type: [String]
+    },
+    totalPoint: {
+      type: Number,
+      default: 0
+    },
+    weeklyPoint: {
+      type: Number,
+      default: 0
     }
   },
   { collection: 'usermeta', timestamps: true }
