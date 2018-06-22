@@ -15,12 +15,9 @@ const router = express.Router();
  * *************************************
 */
 router.post('/register', (req, res) => {
-  req.check('email', 'Email field is empty.').notEmpty();
-  req.check('email', 'Invalid email.').isEmail();
+  req.check('deviceId', 'Device Id field is empty.').notEmpty();
   req.check('password', 'Password field is empty.').notEmpty();
   req.check('password', 'Password length is less than 6.').isLength({ min: 6 });
-  req.check('firstname', 'Firstname field is empty.').notEmpty();
-  req.check('lastname', 'Lastname field is empty.').notEmpty();
   const errors = req.validationErrors();
   if (errors) {
     const messages = [];
@@ -35,18 +32,16 @@ router.post('/register', (req, res) => {
     });
   }
 
-  return User.findOne({ email: req.body.email }, (e, user) => {
+  return User.findOne({ deviceId: req.body.deviceId }, (e, user) => {
     if (user) {
       return res.json({
         success: false,
-        message: 'User with this email already exist.'
+        message: 'User with this deviceId already exist.'
       });
     }
     const newUser = User({
-      email: req.body.email,
-      password: req.body.password,
-      firstname: req.body.firstname,
-      lastname: req.body.lastname
+      deviceId: req.body.deviceId,
+      password: req.body.password
     });
     return newUser.save(err => {
       if (err) {
@@ -56,294 +51,9 @@ router.post('/register', (req, res) => {
           error: err
         });
       }
-
-      /*
-
-			// Create a email verification token
-			const token = Token({
-				userId: newUser._id,
-				token: crypto.randomBytes(16).toString('hex'),
-			})
-
-			// Save the verification token
-			return token.save((err2) => {
-				if (err2) {
-					User.findByIdAndRemove(newUser._id)
-					return res.json({
-						success: false,
-						message: 'Something went wrong, Try again.',
-						error: err2,
-					})
-				}
-
-				// Send the email
-				const transporter = nodemailer.createTransport({
-					host: 'mail.lazarustud.io',
-					port: 587,
-					secure: false,
-					tls: true,
-					lsOptions: { rejectUnauthorized: false }
-,
-					auth: {
-						user: config.email.id,
-						pass: config.email.pass,
-					},
-				})
-				const mailOptions = {
-					from: 'no-reply@brainapp.com',
-					to: newUser.email,
-					subject: 'Account Verification',
-					text: `Hello,
-						\n\n
-						Please verify your account by clicking the link:\n http://${req.headers.host}/verification/${token.token}\n`,
-				}
-
-				// Send verification Link
-				return transporter.sendMail(mailOptions, (trerr) => {
-					if (trerr) {
-						User.findByIdAndRemove(newUser._id)
-						return res.json({ success: false, message: 'Couldn\'t send email verification', error: trerr.message })
-					}
-					return res.json({ success: true, message: `A verification email has been sent to ${newUser.email}` })
-				})
-			})
-
-			*/
       return res.json({
         success: true,
-        message: `User successfully registered with email address ${newUser.email}`
-      });
-    });
-  });
-});
-
-/*
- ***************************************
- * Email Verification
- * *************************************
-*/
-router.post('/verification', (req, res) => {
-  req.check('token', 'Token field is empty.').notEmpty();
-  const errors = req.validationErrors();
-  if (errors) {
-    const messages = [];
-    errors.forEach(error => {
-      messages.push(error.msg);
-    });
-    const newErrors = errors.map(err => `${err.msg}`);
-    return res.json({
-      success: false,
-      message: 'Something went wrong.',
-      errors: newErrors
-    });
-  }
-
-  return Token.findOne({ token: req.body.token }, (err, token) => {
-    if (!token) {
-      return res.json({
-        success: false,
-        message: 'Token is invalid or expired. Create user again.'
-      });
-    }
-    return User.findOne({ _id: token.userId }, (err2, user) => {
-      if (!user) {
-        return res.json({
-          success: false,
-          message: 'No user found with this token.'
-        });
-      }
-      if (user.isVerified) {
-        return res.json({
-          success: false,
-          message: 'User Already Verified.'
-        });
-      }
-      const newUser = user;
-      newUser.isVerified = true;
-      return newUser.save(err3 => {
-        if (err3) {
-          return res.json({
-            success: false,
-            message: "Couldn't verify user",
-            error: err3
-          });
-        }
-        return res.json({
-          success: true,
-          message: 'User verified successfully.'
-        });
-      });
-    });
-  });
-});
-
-/*
- ***************************************
- * Resend Email Verification
- * *************************************
-*/
-router.post('/resend-verification', (req, res) => {
-  req.check('email', 'Email field is empty.').notEmpty();
-  const errors = req.validationErrors();
-  if (errors) {
-    const messages = [];
-    errors.forEach(error => {
-      messages.push(error.msg);
-    });
-    const newErrors = errors.map(err => `${err.msg}`);
-    return res.json({
-      success: false,
-      message: 'Something went wrong.',
-      errors: newErrors
-    });
-  }
-  return User.findOne({ email: req.body.email }, (err, user) => {
-    if (!user) {
-      return res.json({
-        success: false,
-        message: "User with this email doesn't exist."
-      });
-    }
-    if (user.isVerified) {
-      return res.json({
-        success: false,
-        message: 'User with this email is already verified.'
-      });
-    }
-
-    // Create a email verification token
-    const token = Token({
-      userId: user._id, // eslint-disable-line
-      token: crypto.randomBytes(16).toString('hex')
-    });
-
-    // Save the verification token
-    return token.save(err2 => {
-      if (err2) {
-        return res.json({
-          success: false,
-          message: 'Something went wrong, Try again.',
-          error: err2
-        });
-      }
-
-      // Send the email
-      const transporter = nodemailer.createTransport({
-        host: 'mail.lazarustud.io',
-        port: 587,
-        secure: false,
-        tls: { rejectUnauthorized: false },
-        auth: {
-          user: config.email.id,
-          pass: config.email.pass
-        }
-      });
-      const mailOptions = {
-        from: 'no-reply@yourwebapplication.com',
-        to: user.email,
-        subject: 'Account Verification',
-        text: `Hello,\n\n Please verify your account by clicking the link: \n http://${
-          req.headers.host
-        }/verification/${token.token}\n`
-      };
-
-      // Send verification Link
-      return transporter.sendMail(mailOptions, trerr => {
-        if (trerr) {
-          return res.json({
-            success: false,
-            message: "Couldn't send email verification",
-            error: trerr.message
-          });
-        }
-        return res.json({
-          success: true,
-          message: `A verification email has been sent to ${user.email}`
-        });
-      });
-    });
-  });
-});
-
-/*
- ***************************************
- * Ask For reset password
- * *************************************
-*/
-router.post('/ask-reset-password', (req, res) => {
-  req.check('email', 'Email field is empty.').notEmpty();
-  req.check('email', 'Invalid email.').isEmail();
-  const errors = req.validationErrors();
-  if (errors) {
-    const messages = [];
-    errors.forEach(error => {
-      messages.push(error.msg);
-    });
-    const newErrors = errors.map(err => `${err.msg}`);
-    return res.json({
-      success: false,
-      message: 'Something went wrong.',
-      errors: newErrors
-    });
-  }
-
-  return User.findOne({ email: req.body.email }, (e, user) => {
-    if (!user) {
-      return res.json({
-        success: false,
-        message: "User with this email doesn't exist."
-      });
-    }
-
-    // Create a password reset token
-    const token = ResetToken({
-      userId: user._id, // eslint-disable-line
-      token: crypto.randomBytes(16).toString('hex')
-    });
-
-    // Save the verification token
-    return token.save(err2 => {
-      if (err2) {
-        return res.json({
-          success: false,
-          message: 'Something went wrong, Try again.',
-          error: err2
-        });
-      }
-
-      // Send the email
-      const transporter = nodemailer.createTransport({
-        host: 'mail.lazarustud.io',
-        port: 587,
-        secure: false,
-        tls: { rejectUnauthorized: false },
-        auth: {
-          user: config.email.id,
-          pass: config.email.pass
-        }
-      });
-      const mailOptions = {
-        from: 'no-reply@yourwebapplication.com',
-        to: user.email,
-        subject: 'Reset Password',
-        text: `Hello,\n\n Please reset your password by clicking the link: \n http://${
-          req.headers.host
-        }/reset-password/${token.token}\n`
-      };
-
-      // Send verification Link
-      return transporter.sendMail(mailOptions, trerr => {
-        if (trerr) {
-          return res.json({
-            success: false,
-            message: "Couldn't send password reset email",
-            error: trerr.message
-          });
-        }
-        return res.json({
-          success: true,
-          message: `An email to reset password has been sent to ${user.email}`
-        });
+        message: `User successfully registered with email address ${newUser.deviceId}`
       });
     });
   });
@@ -356,7 +66,6 @@ router.post('/ask-reset-password', (req, res) => {
 */
 router.post('/reset-password', (req, res) => {
   req.check('password', 'Password field is empty.').notEmpty();
-  req.check('token', 'Token field is empty.').notEmpty();
   const errors = req.validationErrors();
   if (errors) {
     const messages = [];
@@ -409,8 +118,7 @@ router.post('/reset-password', (req, res) => {
  * *************************************
 */
 router.post('/authenticate', (req, res) => {
-  req.check('email', 'Email field is empty.').notEmpty();
-  req.check('email', 'Invalid email.').isEmail();
+  req.check('deviceId', 'Device Id field is empty.').notEmpty();
   req.check('password', 'Password field is empty.').notEmpty();
   req.check('password', 'Password length is less than 6.').isLength({ min: 6 });
 
@@ -427,7 +135,7 @@ router.post('/authenticate', (req, res) => {
       errors: newErrors
     });
   }
-  return User.findOne({ email: req.body.email }, (err, user) => {
+  return User.findOne({ deviceId: req.body.deviceId }, (err, user) => {
     if (err) {
       return res.json({
         success: false,
@@ -437,26 +145,16 @@ router.post('/authenticate', (req, res) => {
     if (!user) {
       return res.json({
         success: false,
-        message: "User with this email doesn't exist."
+        message: "User with this deviceId doesn't exist."
       });
     }
-    /*
-		if (!user.isVerified) {
-			return res.json({
-				success: false,
-				message: 'User is not verified. Check your email.',
-			})
-		}
-		*/
+
     if (!user.comparePassword(req.body.password)) {
       return res.json({ success: false, message: 'Incorrect Password.' });
     }
     const tokenData = {
       _id: user._id, // eslint-disable-line
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      profilePhoto: user.profilePhoto
+      deviceId: user.deviceId
     };
     const token = jwt.sign({ data: tokenData }, config.secret, {
       expiresIn: 1204800
@@ -476,7 +174,7 @@ router.get('/users', async (req, res) => {
   let limitNo = parseInt(limit, 10);
   let sort = { createdAt: -1 };
   let findFilter = {};
-  let select = 'firstname lastname email createdAt updatedAt';
+  let select = 'deviceId createdAt updatedAt';
 
   // filter
   if (filter) {

@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 
 const userSchema = Schema(
   {
-    email: {
+    deviceId: {
       type: String,
       required: true,
       unique: true
@@ -14,20 +14,6 @@ const userSchema = Schema(
     password: {
       type: String,
       required: true
-    },
-    isVerified: {
-      type: Boolean,
-      default: false
-    },
-    firstname: {
-      type: String
-    },
-    lastname: {
-      type: String
-    },
-    profilePhoto: {
-      type: String,
-      default: '/images/avatar.png'
     }
   },
   { collection: 'user', timestamps: true }

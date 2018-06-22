@@ -10,6 +10,19 @@ const usermetaSchema = Schema(
       required: true,
       unique: true
     },
+    email: {
+      type: String
+    },
+    firstname: {
+      type: String
+    },
+    lastname: {
+      type: String
+    },
+    profilePhoto: {
+      type: String,
+      default: '/images/avatar.png'
+    },
     myMcqs: {
       type: [String]
     },
