@@ -18,6 +18,7 @@ import usermeta from './routes/usermeta';
 import discussion from './routes/discussion';
 import comment from './routes/comment';
 import test from './routes/test';
+import feedback from './routes/feedback';
 
 // common routes
 import common from './routes/common';
@@ -65,6 +66,7 @@ app.use('/api', usermeta);
 app.use('/api', discussion);
 app.use('/api', comment);
 app.use('/api', test);
+app.use('/api', feedback);
 
 // scheduling task
 require('./utils/schedule'); // eslint-disable-line
