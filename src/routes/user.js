@@ -1,9 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import nodemailer from 'nodemailer';
 import User from '../models/user';
-import Token from '../models/token';
 import ResetToken from '../models/resetToken';
 import config from '../utils/config';
 
@@ -53,7 +50,7 @@ router.post('/register', (req, res) => {
       }
       return res.json({
         success: true,
-        message: `User successfully registered with email address ${newUser.deviceId}`
+        message: `User successfully registered with device id ${newUser.deviceId}`
       });
     });
   });

@@ -27,7 +27,6 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Database Setup
-mongoose.Promise = global.Promise;
 mongoose.connect(config.mdbl);
 const db = mongoose.connection;
 db

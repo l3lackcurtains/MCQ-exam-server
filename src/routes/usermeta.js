@@ -118,6 +118,24 @@ router.put('/usermeta/:id', async (req, res) => {
 
 /*
  ***************************************
+ * Update usermeta by uid
+ * *************************************
+*/
+router.put('/usermeta/uid/:id', async (req, res) => {
+  try {
+    const usermeta = await Usermeta.findOne({ uid: req.params.id });
+    if (!usermeta) res.json({ success: false, message: 'Usermeta User id is invalid.' });
+    usermeta.set({ ...req.body });
+    const updateUsermeta = await usermeta.save();
+    if (!updateUsermeta) res.json({ success: false, message: 'Error updating usermeta.' });
+    res.json({ success: true, message: 'Usermeta updated successfully', data: updateUsermeta });
+  } catch (e) {
+    res.json({ success: false, message: 'Something went wrong, Try again.', error: e });
+  }
+});
+
+/*
+ ***************************************
  * Delete usermeta
  * *************************************
 */
