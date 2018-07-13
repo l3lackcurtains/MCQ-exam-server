@@ -48,6 +48,10 @@ const usermetaSchema = Schema(
     weeklyPoint: {
       type: Number,
       default: 0
+    },
+    isPremium: {
+      type: Boolean,
+      default: false
     }
   },
   { collection: 'usermeta', timestamps: true }

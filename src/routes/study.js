@@ -126,4 +126,17 @@ router.delete('/study/:id', async (req, res) => {
   }
 });
 
+/*
+ ***************************************
+ * Search study
+ * *************************************
+*/
+router.post('/study-search', async (req, res) => {
+  const query = req.body.question;
+  Study.find({ question: new RegExp(`^${query}`, 'i') }, (err, data) => {
+    if (err) res.json({ success: false, message: 'Something went wrong, Try again.', error: err });
+    res.json({ success: true, message: data });
+  });
+});
+
 export default router;
