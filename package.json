@@ -6,7 +6,7 @@
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.18.2",
     "crypto": "^1.0.1",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "express-handlebars": "^3.0.0",
     "express-validator": "^5.0.1",
     "helmet": "^3.10.0",
